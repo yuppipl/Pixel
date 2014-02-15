@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "almond": "~0.2.7",
-    "pixi": "~1.5.0"
+    "pixi": "~1.5.0",
+    "Keypress": "~2.0.1"
   }
 }
-

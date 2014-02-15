@@ -19,6 +19,7 @@
     
     <script src="bower_components/pixi/bin/pixi.js"></script>
     <script src="bower_components/almond/almond.js"></script>
+    <script src="bower_components/Keypress/keypress.js"></script>
     <script src="src/Pixel.js"></script>
     <script src="src/Action.js"></script>
     <script src="src/SequenceAction.js"></script>
@@ -33,6 +34,7 @@
         var view = Pixel.init()
         document.body.appendChild(view);
 
+        var listener = new window.keypress.Listener();
 
         var createBunny = function(){
           var texture = PIXI.Texture.fromImage("res/bunny.png");
@@ -48,10 +50,35 @@
 
         var bunny = createBunny(200,150);
         var bunny2 = createBunny(200,150);
+        var bunny3 = createBunny(380, 150);
 
         var stage = new PIXI.Stage(0x66FF99);
         stage.addChild(bunny);
         stage.addChild(bunny2);
+        stage.addChild(bunny3);
+        
+        var offset = 30;
+        var time = 0.1;
+
+        listener.simple_combo("left", function() {
+            var moveAction = new Pixel.MoveAction(bunny3, time, bunny3.position.x-offset, bunny3.position.y);
+            Pixel.addAction(moveAction);
+        });
+
+        listener.simple_combo("right", function() {
+            var moveAction = new Pixel.MoveAction(bunny3, time, bunny3.position.x+offset, bunny3.position.y);
+            Pixel.addAction(moveAction);
+        });
+
+        listener.simple_combo("up", function() {
+            var moveAction = new Pixel.MoveAction(bunny3, time, bunny3.position.x, bunny3.position.y-offset);
+            Pixel.addAction(moveAction);
+        });
+
+        listener.simple_combo("down", function() {
+            var moveAction = new Pixel.MoveAction(bunny3, time, bunny3.position.x, bunny3.position.y+offset);
+            Pixel.addAction(moveAction);
+        });
 
 
         var moveAction1 = new Pixel.MoveAction(bunny, 1, 20, 20);
