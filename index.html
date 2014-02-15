@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+    Remove this if you use the .htaccess -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Pixel</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    
+    <script src="bower_components/pixi/bin/pixi.js"></script>
+    <script src="bower_components/almond/almond.js"></script>
+    <script src="src/Pixel.js"></script>
+    <script src="src/Action.js"></script>
+    <script src="src/SequenceAction.js"></script>
+    <script src="src/MoveAction.js"></script>
+    <script src="src/RotateAction.js"></script>
+    <script src="src/RepeatAction.js"></script>
+    <script src="src/ParallelAction.js"></script>
+  </head>
+
+  <body>
+    <script>
+        var view = Pixel.init()
+        document.body.appendChild(view);
+
+
+        var createBunny = function(){
+          var texture = PIXI.Texture.fromImage("res/bunny.png");
+          return function(x, y){
+            var bunny = new PIXI.Sprite(texture);
+            bunny.anchor.x = 0.5;
+            bunny.anchor.y = 0.5;
+            bunny.position.x = x;
+            bunny.position.y = y;
+            return bunny; 
+          };
+        }();
+
+        var bunny = createBunny(200,150);
+        var bunny2 = createBunny(200,150);
+
+        var stage = new PIXI.Stage(0x66FF99);
+        stage.addChild(bunny);
+        stage.addChild(bunny2);
+
+
+        var moveAction1 = new Pixel.MoveAction(bunny, 1, 20, 20);
+        var moveAction2 = new Pixel.MoveAction(bunny, 1, 380, 20);
+        var moveAction3 = new Pixel.MoveAction(bunny, 1, 200,150);
+        var rotation1 = new Pixel.RotateAction(bunny, 1, 2*Math.PI);
+        var sequenceAction = new Pixel.SequenceAction(moveAction1, moveAction2, moveAction3, rotation1);
+        var repeatAction = new Pixel.RepeatAction(sequenceAction, 3);
+        
+        //Pixel.addAction(repeatAction);
+        
+        var action2 = new Pixel.MoveAction(bunny2, 1, 20, 280);
+        var rotation2 = new Pixel.RotateAction(bunny2, 1, -3*Math.PI);
+        var parallelAction = new Pixel.ParallelAction(action2, rotation2, repeatAction);
+        
+        var finalMoveAction1 = new Pixel.MoveAction(bunny, 1, 20, 20);
+        var finalMoveAction2 = new Pixel.MoveAction(bunny2, 1, 20, 20);
+        var finalParallelAction = new Pixel.ParallelAction(finalMoveAction1, finalMoveAction2);
+        var finalSequenceAction = new Pixel.SequenceAction(parallelAction, finalParallelAction);
+        
+        Pixel.addAction(finalSequenceAction);
+        //Pixel.addAction(rotation2);
+    </script>
+  </body>
+</html>
